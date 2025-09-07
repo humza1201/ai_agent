@@ -29,7 +29,7 @@ const CONFIG = {
         
         // RapidAPI ChatGPT Configuration (Advanced)
         RAPIDAPI: {
-            API_KEY: 'b977700d16msheab3b2e8d5b183cp12fd86jsn3f3d8b5fd34f',
+            API_KEY: 'YOUR_RAPIDAPI_API_KEY_HERE',
             HOST: 'chatgpt-42.p.rapidapi.com',
             ENDPOINT: 'https://chatgpt-42.p.rapidapi.com/matag2',
             HEADERS: {
