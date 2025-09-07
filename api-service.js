@@ -220,20 +220,52 @@ class AIService {
                 if (this.readyState === this.DONE) {
                     try {
                         if (this.status === 200) {
-                            const response = JSON.parse(this.responseText);
-                            
-                            // Handle the response format
-                            if (response.choices && response.choices.length > 0) {
-                                resolve(response.choices[0].message.content.trim());
-                            } else if (response.content) {
-                                resolve(response.content.trim());
-                            } else if (response.text) {
-                                resolve(response.text.trim());
-                            } else if (response.result) {
-                                resolve(response.result.trim());
-                            } else {
-                                reject(new Error('Unexpected response format from RapidAPI'));
+                            const rawText = this.responseText;
+                            let response;
+                            try {
+                                response = JSON.parse(rawText);
+                            } catch (e) {
+                                console.error('RapidAPI non-JSON response:', rawText);
+                                return reject(new Error('Failed to parse RapidAPI response as JSON'));
                             }
+
+                            // Normalize a variety of common shapes
+                            // chatgpt-42 endpoints sometimes return: { choices: [{ message: { content } }]} or { result } or { content } or { text }
+                            // Some return arrays like [{ response: '...' }] or streaming-like { message: '...' }
+                            const maybeStringCandidates = [];
+
+                            if (response) {
+                                if (typeof response === 'string') maybeStringCandidates.push(response);
+                                if (response.choices && Array.isArray(response.choices) && response.choices[0]) {
+                                    const choice = response.choices[0];
+                                    if (choice.message && typeof choice.message.content === 'string') {
+                                        maybeStringCandidates.push(choice.message.content);
+                                    }
+                                    if (typeof choice.text === 'string') {
+                                        maybeStringCandidates.push(choice.text);
+                                    }
+                                }
+                                if (typeof response.content === 'string') maybeStringCandidates.push(response.content);
+                                if (typeof response.text === 'string') maybeStringCandidates.push(response.text);
+                                if (typeof response.result === 'string') maybeStringCandidates.push(response.result);
+                                if (Array.isArray(response) && response[0]) {
+                                    const first = response[0];
+                                    if (typeof first === 'string') maybeStringCandidates.push(first);
+                                    if (typeof first.response === 'string') maybeStringCandidates.push(first.response);
+                                    if (typeof first.content === 'string') maybeStringCandidates.push(first.content);
+                                    if (typeof first.text === 'string') maybeStringCandidates.push(first.text);
+                                }
+                                if (typeof response.message === 'string') maybeStringCandidates.push(response.message);
+                                if (response.data && typeof response.data === 'string') maybeStringCandidates.push(response.data);
+                            }
+
+                            const picked = maybeStringCandidates.find(v => typeof v === 'string' && v.trim().length > 0);
+                            if (picked) {
+                                return resolve(picked.trim());
+                            }
+
+                            console.error('RapidAPI unexpected response shape:', response);
+                            reject(new Error('Unexpected response format from RapidAPI'));
                         } else {
                             const errorText = this.responseText || 'Unknown error';
                             
@@ -241,7 +273,14 @@ class AIService {
                             if (this.status === 403 && errorText.includes('not subscribed')) {
                                 reject(new Error('RapidAPI Subscription Required: You need to subscribe to the ChatGPT API on RapidAPI. Please visit https://rapidapi.com/chatgpt-42/api/chatgpt-42 to subscribe, or switch to a different provider in config.js'));
                             } else {
-                                reject(new Error(`RapidAPI Error: ${this.status} - ${errorText}`));
+                                let details = errorText;
+                                try {
+                                    const parsed = JSON.parse(errorText);
+                                    if (parsed && (parsed.message || parsed.error)) {
+                                        details = parsed.message || parsed.error;
+                                    }
+                                } catch {}
+                                reject(new Error(`RapidAPI Error: ${this.status} - ${details}`));
                             }
                         }
                     } catch (parseError) {
