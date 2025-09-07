@@ -33,8 +33,6 @@ Just open index.html in any modern browser 🌐 and start chatting with the AI A
 <img width="1919" height="1079" alt="Screenshot 2025-09-07 151042" src="https://github.com/user-attachments/assets/6b720bfc-a60c-4c5e-81f9-3d6ec7da7569" />
 
 
-<img width="1019" height="767" alt="Screenshot 2025-09-06 140939" src="https://github.com/user-attachments/assets/d1f2ffd7-a968-4575-90d6-7b47fd36fcbe" />
-
 
 💡 Future Improvements
 
