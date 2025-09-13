@@ -34,6 +34,11 @@ Just open index.html in any modern browser 🌐 and start chatting with the AI A
 
 
 
+
+https://github.com/user-attachments/assets/d7785eb7-819a-4221-ae47-f82f98b06260
+
+
+
 💡 Future Improvements
 
 🔗 Connect with real AI APIs (e.g., OpenAI, Gemini, etc.)
