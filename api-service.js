@@ -214,7 +214,6 @@ class AIService {
 
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-            xhr.withCredentials = true;
 
             xhr.addEventListener('readystatechange', function () {
                 if (this.readyState === this.DONE) {
@@ -227,6 +226,11 @@ class AIService {
                             } catch (e) {
                                 console.error('RapidAPI non-JSON response:', rawText);
                                 return reject(new Error('Failed to parse RapidAPI response as JSON'));
+                            }
+
+                            // Explicitly detect empty-result responses
+                            if (response && response.status === true && Array.isArray(response.result) && response.result.length === 0) {
+                                return reject(new Error('RapidAPI returned empty result'));
                             }
 
                             // Normalize a variety of common shapes
@@ -290,7 +294,7 @@ class AIService {
             });
 
             xhr.open('POST', endpoint);
-            xhr.setRequestHeader('x-rapidapi-key', headers['x-rapidapi-key']);
+            xhr.setRequestHeader('x-rapidapi-key', apiKey);
             xhr.setRequestHeader('x-rapidapi-host', headers['x-rapidapi-host']);
             xhr.setRequestHeader('Content-Type', headers['Content-Type']);
 

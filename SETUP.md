@@ -2,13 +2,13 @@
 
 ## 🚀 Quick Start
 
-**Your RapidAPI ChatGPT is already configured and ready to use!**
+**Your FreeGPT provider is already configured and ready to use!**
 
 1. **Open `index.html`** in your browser
 2. **Click "Ask Anything"** to start the chat
 3. **Start chatting** with your AI assistant!
 
-*No additional setup needed - your API key is already configured!*
+*No API key needed for the default FreeGPT provider.*
 
 ## ✅ Current Configuration
 
