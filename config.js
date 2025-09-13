@@ -3,7 +3,7 @@ const CONFIG = {
     // API Configuration
     API: {
         // Choose your preferred API service
-        PROVIDER: 'rapidapi', // Options: 'openai', 'anthropic', 'google', 'rapidapi', 'freegpt', 'huggingface', 'alternative', 'local', 'custom'
+        PROVIDER: 'freegpt', // Options: 'openai', 'anthropic', 'google', 'rapidapi', 'freegpt', 'huggingface', 'alternative', 'local', 'custom'
         
         // OpenAI Configuration
         OPENAI: {
@@ -33,7 +33,7 @@ const CONFIG = {
             HOST: 'chatgpt-42.p.rapidapi.com',
             ENDPOINT: 'https://chatgpt-42.p.rapidapi.com/matag2',
             HEADERS: {
-                'x-rapidapi-key': 'b977700d16msheab3b2e8d5b183cp12fd86jsn3f3d8b5fd34f',
+                // Intentionally omit API key from headers. It will be set at runtime from API_KEY.
                 'x-rapidapi-host': 'chatgpt-42.p.rapidapi.com',
                 'Content-Type': 'application/json'
             },
@@ -49,8 +49,7 @@ const CONFIG = {
         FREEGPT: {
             ENDPOINT: 'https://api.freegpt.one/v1/chat/completions',
             HEADERS: {
-                'Content-Type': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                'Content-Type': 'application/json'
             }
         },
         
